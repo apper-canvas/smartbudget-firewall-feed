@@ -44,16 +44,6 @@ useEffect(() => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
-        setAlertSummary(summary);
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, currentMonth, monthlyExpenses]);
-
   if (loading) return <Loading text="Loading dashboard..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
@@ -77,10 +67,20 @@ useEffect(() => {
 
   const netIncome = monthlyIncome - monthlyExpenses;
 
-// Get current month budget
+  // Get current month budget
   const currentBudget = budgets.find(b => 
     b.month === format(currentMonth, "yyyy-MM")
   );
+
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
+        setAlertSummary(summary);
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, currentMonth, monthlyExpenses]);
 
   const remainingBudget = currentBudget ? currentBudget.totalLimit - monthlyExpenses : 0;
 

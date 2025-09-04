@@ -66,19 +66,7 @@ const Budgets = () => {
       });
     }
   }, [selectedMonth, budgets]);
-
-// Load budget alerts when data changes
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
-        // You could store alerts in state if needed for UI
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, selectedMonth, categorySpending]);
-
-  if (loading) return <Loading text="Loading budgets..." />;
+if (loading) return <Loading text="Loading budgets..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
   const expenseCategories = categories.filter(cat => cat.type === "expense");
@@ -98,6 +86,17 @@ const Budgets = () => {
     acc[t.category] = (acc[t.category] || 0) + t.amount;
     return acc;
   }, {});
+
+  // Load budget alerts when data changes
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+        // You could store alerts in state if needed for UI
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, selectedMonth, categorySpending]);
 
   const handleCategoryLimitChange = (categoryName, value) => {
     setBudgetForm(prev => ({
