@@ -12,9 +12,9 @@ import ApperIcon from "@/components/ApperIcon";
 import { budgetService } from "@/services/api/budgetService";
 import { categoryService } from "@/services/api/categoryService";
 import { transactionService } from "@/services/api/transactionService";
+import { budgetAlertService } from "@/services/api/budgetAlertService";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { toast } from "react-toastify";
-
 const Budgets = () => {
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -67,6 +67,17 @@ const Budgets = () => {
     }
   }, [selectedMonth, budgets]);
 
+// Load budget alerts when data changes
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+        // You could store alerts in state if needed for UI
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, selectedMonth, categorySpending]);
+
   if (loading) return <Loading text="Loading budgets..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
@@ -98,7 +109,7 @@ const Budgets = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!budgetForm.totalLimit || parseFloat(budgetForm.totalLimit) <= 0) {
@@ -123,21 +134,42 @@ const Budgets = () => {
       }
       
       await loadData();
+      
+      // Check for alerts after budget update
+      const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+      if (alerts.totalAlert || alerts.categoryAlerts.length > 0) {
+        toast.info("Budget alerts updated based on current spending", {
+          position: "top-right",
+          autoClose: 3000
+        });
+      }
+      
       setShowForm(false);
     } catch (err) {
       toast.error("Failed to save budget");
     }
   };
 
-  const budgetCards = currentBudget ? 
+const budgetCards = currentBudget ? 
     Object.entries(currentBudget.categoryLimits)
       .filter(([_, budget]) => budget > 0)
-      .map(([category, budget]) => ({
-        category,
-        budget,
-        spent: categorySpending[category] || 0,
-        color: categories.find(c => c.name === category)?.color || "#2563EB"
-      })) : [];
+      .map(([category, budget]) => {
+        const spent = categorySpending[category] || 0;
+        const percentage = budget > 0 ? (spent / budget) * 100 : 0;
+        
+        return {
+          category,
+          budget,
+          spent,
+          percentage,
+          color: categories.find(c => c.name === category)?.color || "#2563EB",
+          alertLevel: percentage >= 100 ? 'exceeded' : percentage >= 90 ? 'critical' : percentage >= 80 ? 'warning' : 'safe'
+        };
+      }) : [];
+
+// Budget alerts for current month
+  const currentAlerts = budgetCards.filter(card => card.alertLevel !== 'safe');
+  const hasAlerts = currentAlerts.length > 0;
 
   return (
     <div className="p-6 space-y-6">

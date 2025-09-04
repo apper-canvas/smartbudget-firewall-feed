@@ -4,20 +4,38 @@ import ProgressRing from "@/components/molecules/ProgressRing";
 import ApperIcon from "@/components/ApperIcon";
 
 const BudgetCard = ({ category, budget, spent, color }) => {
-  const percentage = budget > 0 ? (spent / budget) * 100 : 0;
+const percentage = budget > 0 ? (spent / budget) * 100 : 0;
   const remaining = budget - spent;
   const isOverBudget = percentage > 100;
+  const isCritical = percentage >= 90;
+  const isWarning = percentage >= 80;
 
   const getVariant = () => {
-    if (isOverBudget) return "warning";
-    if (percentage > 80) return "warning";
+    if (isOverBudget) return "critical";
+    if (isCritical) return "warning";
+    if (isWarning) return "warning";
     return "default";
   };
 
   const getProgressColor = () => {
     if (isOverBudget) return "#EF4444";
-    if (percentage > 80) return "#F59E0B";
+    if (isCritical) return "#F59E0B";
+    if (isWarning) return "#F59E0B";
     return color || "#2563EB";
+  };
+
+  const getAlertIcon = () => {
+    if (isOverBudget) return "XCircle";
+    if (isCritical) return "AlertCircle";
+    if (isWarning) return "AlertTriangle";
+    return null;
+  };
+
+  const getAlertMessage = () => {
+    if (isOverBudget) return `Over budget by $${(spent - budget).toLocaleString()}`;
+    if (isCritical) return `Critical: Only $${Math.max(0, remaining).toLocaleString()} remaining`;
+    if (isWarning) return `Warning: $${remaining.toLocaleString()} remaining`;
+    return null;
   };
 
   return (
@@ -60,15 +78,21 @@ const BudgetCard = ({ category, budget, spent, color }) => {
           </div>
         </div>
         
-        {isOverBudget && (
+{(isWarning || isCritical || isOverBudget) && (
           <motion.div 
-            className="flex items-center text-error text-sm mt-3 p-2 bg-error/10 rounded-lg"
+            className={`flex items-center text-sm mt-3 p-2 rounded-lg ${
+              isOverBudget 
+                ? 'text-error bg-error/10' 
+                : isCritical 
+                ? 'text-warning bg-warning/10'
+                : 'text-warning bg-warning/10'
+            }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <ApperIcon name="AlertTriangle" size={16} className="mr-2" />
-            <span>Over budget by ${(spent - budget).toLocaleString()}</span>
+            <ApperIcon name={getAlertIcon()} size={16} className="mr-2" />
+            <span>{getAlertMessage()}</span>
           </motion.div>
         )}
       </Card>

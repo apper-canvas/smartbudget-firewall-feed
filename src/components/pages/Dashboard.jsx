@@ -12,15 +12,15 @@ import ApperIcon from "@/components/ApperIcon";
 import { transactionService } from "@/services/api/transactionService";
 import { budgetService } from "@/services/api/budgetService";
 import { categoryService } from "@/services/api/categoryService";
+import { budgetAlertService } from "@/services/api/budgetAlertService";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-
 const Dashboard = ({ onAddTransaction }) => {
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+const [alertSummary, setAlertSummary] = useState(null);
   const loadData = async () => {
     try {
       setLoading(true);
@@ -67,7 +67,7 @@ const Dashboard = ({ onAddTransaction }) => {
 
   const netIncome = monthlyIncome - monthlyExpenses;
 
-  // Get current month budget
+// Get current month budget
   const currentBudget = budgets.find(b => 
     b.month === format(currentMonth, "yyyy-MM")
   );
@@ -81,6 +81,17 @@ const Dashboard = ({ onAddTransaction }) => {
       acc[t.category] = (acc[t.category] || 0) + t.amount;
       return acc;
     }, {});
+
+  // Load budget alerts
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
+        setAlertSummary(summary);
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, currentMonth, monthlyExpenses]);
 
   const budgetCards = currentBudget ? 
     Object.entries(currentBudget.categoryLimits).map(([category, budget]) => ({
@@ -105,7 +116,55 @@ const Dashboard = ({ onAddTransaction }) => {
           Add Transaction
         </Button>
       </div>
-
+{/* Budget Alerts Section */}
+        {alertSummary && alertSummary.totalAlerts > 0 && (
+          <motion.div 
+            className="col-span-full mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                <ApperIcon name="AlertTriangle" size={20} className="mr-2 text-warning" />
+                Budget Alerts
+              </h2>
+              <span className="text-sm text-gray-600">
+                {alertSummary.totalAlerts} active alert{alertSummary.totalAlerts !== 1 ? 's' : ''}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {alertSummary.exceeded > 0 && (
+                <StatCard
+                  title="Budget Exceeded"
+                  value={alertSummary.exceeded}
+                  icon="XCircle"
+                  variant="critical"
+                  alertLevel="exceeded"
+                />
+              )}
+              {alertSummary.critical > 0 && (
+                <StatCard
+                  title="Critical Alerts"
+                  value={alertSummary.critical}
+                  icon="AlertCircle"
+                  variant="warning"
+                  alertLevel="critical"
+                />
+              )}
+              {alertSummary.warning > 0 && (
+                <StatCard
+                  title="Warning Alerts"
+                  value={alertSummary.warning}
+                  icon="AlertTriangle"
+                  variant="warning"
+                  alertLevel="warning"
+                />
+              )}
+            </div>
+          </motion.div>
+        )}
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
@@ -131,13 +190,14 @@ const Dashboard = ({ onAddTransaction }) => {
           trendValue={netIncome >= 0 ? "Positive cash flow" : "Negative cash flow"}
           variant={netIncome >= 0 ? "success" : "warning"}
         />
-        <StatCard
+<StatCard
           title="Remaining Budget"
           value={remainingBudget}
           icon="Target"
           trend={remainingBudget >= 0 ? "up" : "down"}
           trendValue={remainingBudget >= 0 ? "Under budget" : "Over budget"}
           variant={remainingBudget >= 0 ? "default" : "warning"}
+          alertLevel={remainingBudget < 0 ? "exceeded" : remainingBudget < (currentBudget?.totalLimit * 0.2) ? "critical" : "safe"}
         />
       </div>
 
