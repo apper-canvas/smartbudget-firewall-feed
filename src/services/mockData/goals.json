@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Emergency Fund",
+    "targetAmount": 10000,
+    "currentAmount": 6500,
+    "deadline": "2024-12-31",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Vacation to Europe",
+    "targetAmount": 5000,
+    "currentAmount": 2800,
+    "deadline": "2024-08-15",
+    "createdAt": "2024-01-15T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "name": "New Laptop",
+    "targetAmount": 2000,
+    "currentAmount": 1200,
+    "deadline": "2024-06-01",
+    "createdAt": "2024-02-01T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "name": "Car Down Payment",
+    "targetAmount": 8000,
+    "currentAmount": 3500,
+    "deadline": "2024-10-01",
+    "createdAt": "2024-01-20T00:00:00.000Z"
+  }
+]

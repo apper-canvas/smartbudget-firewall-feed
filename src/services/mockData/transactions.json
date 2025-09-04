@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "type": "income",
+    "amount": 5000,
+    "category": "Salary",
+    "date": "2024-01-01",
+    "description": "Monthly salary",
+    "createdAt": "2024-01-01T08:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "type": "expense",
+    "amount": 1200,
+    "category": "Rent",
+    "date": "2024-01-01",
+    "description": "Monthly rent payment",
+    "createdAt": "2024-01-01T09:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "type": "expense",
+    "amount": 450,
+    "category": "Groceries",
+    "date": "2024-01-02",
+    "description": "Weekly grocery shopping",
+    "createdAt": "2024-01-02T10:30:00.000Z"
+  },
+  {
+    "id": 4,
+    "type": "expense",
+    "amount": 75,
+    "category": "Utilities",
+    "date": "2024-01-03",
+    "description": "Electricity bill",
+    "createdAt": "2024-01-03T14:15:00.000Z"
+  },
+  {
+    "id": 5,
+    "type": "expense",
+    "amount": 200,
+    "category": "Transportation",
+    "date": "2024-01-04",
+    "description": "Monthly metro pass",
+    "createdAt": "2024-01-04T11:20:00.000Z"
+  },
+  {
+    "id": 6,
+    "type": "expense",
+    "amount": 150,
+    "category": "Entertainment",
+    "date": "2024-01-05",
+    "description": "Movie tickets and dinner",
+    "createdAt": "2024-01-05T20:45:00.000Z"
+  },
+  {
+    "id": 7,
+    "type": "income",
+    "amount": 300,
+    "category": "Freelance",
+    "date": "2024-01-06",
+    "description": "Web design project",
+    "createdAt": "2024-01-06T16:30:00.000Z"
+  },
+  {
+    "id": 8,
+    "type": "expense",
+    "amount": 85,
+    "category": "Health",
+    "date": "2024-01-07",
+    "description": "Pharmacy prescription",
+    "createdAt": "2024-01-07T13:10:00.000Z"
+  },
+  {
+    "id": 9,
+    "type": "expense",
+    "amount": 320,
+    "category": "Groceries",
+    "date": "2024-01-08",
+    "description": "Bulk shopping at warehouse",
+    "createdAt": "2024-01-08T15:25:00.000Z"
+  },
+  {
+    "id": 10,
+    "type": "expense",
+    "amount": 60,
+    "category": "Dining Out",
+    "date": "2024-01-09",
+    "description": "Lunch with colleagues",
+    "createdAt": "2024-01-09T12:40:00.000Z"
+  },
+  {
+    "id": 11,
+    "type": "expense",
+    "amount": 180,
+    "category": "Shopping",
+    "date": "2024-01-10",
+    "description": "New winter jacket",
+    "createdAt": "2024-01-10T17:55:00.000Z"
+  },
+  {
+    "id": 12,
+    "type": "income",
+    "amount": 5000,
+    "category": "Salary",
+    "date": "2024-02-01",
+    "description": "Monthly salary",
+    "createdAt": "2024-02-01T08:00:00.000Z"
+  },
+  {
+    "id": 13,
+    "type": "expense",
+    "amount": 1200,
+    "category": "Rent",
+    "date": "2024-02-01",
+    "description": "Monthly rent payment",
+    "createdAt": "2024-02-01T09:00:00.000Z"
+  },
+  {
+    "id": 14,
+    "type": "expense",
+    "amount": 380,
+    "category": "Groceries",
+    "date": "2024-02-03",
+    "description": "Weekly grocery shopping",
+    "createdAt": "2024-02-03T10:15:00.000Z"
+  },
+  {
+    "id": 15,
+    "type": "expense",
+    "amount": 125,
+    "category": "Utilities",
+    "date": "2024-02-05",
+    "description": "Gas and water bill",
+    "createdAt": "2024-02-05T14:30:00.000Z"
+  }
+]

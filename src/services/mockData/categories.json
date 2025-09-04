@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "name": "Salary",
+    "type": "income",
+    "icon": "Briefcase",
+    "color": "#10B981"
+  },
+  {
+    "id": 2,
+    "name": "Freelance",
+    "type": "income",
+    "icon": "Monitor",
+    "color": "#3B82F6"
+  },
+  {
+    "id": 3,
+    "name": "Investment",
+    "type": "income",
+    "icon": "TrendingUp",
+    "color": "#8B5CF6"
+  },
+  {
+    "id": 4,
+    "name": "Rent",
+    "type": "expense",
+    "icon": "Home",
+    "color": "#EF4444"
+  },
+  {
+    "id": 5,
+    "name": "Groceries",
+    "type": "expense",
+    "icon": "ShoppingCart",
+    "color": "#F59E0B"
+  },
+  {
+    "id": 6,
+    "name": "Transportation",
+    "type": "expense",
+    "icon": "Car",
+    "color": "#06B6D4"
+  },
+  {
+    "id": 7,
+    "name": "Utilities",
+    "type": "expense",
+    "icon": "Zap",
+    "color": "#84CC16"
+  },
+  {
+    "id": 8,
+    "name": "Entertainment",
+    "type": "expense",
+    "icon": "Film",
+    "color": "#EC4899"
+  },
+  {
+    "id": 9,
+    "name": "Health",
+    "type": "expense",
+    "icon": "Heart",
+    "color": "#F97316"
+  },
+  {
+    "id": 10,
+    "name": "Dining Out",
+    "type": "expense",
+    "icon": "Coffee",
+    "color": "#A855F7"
+  },
+  {
+    "id": 11,
+    "name": "Shopping",
+    "type": "expense",
+    "icon": "Shopping",
+    "color": "#14B8A6"
+  },
+  {
+    "id": 12,
+    "name": "Education",
+    "type": "expense",
+    "icon": "BookOpen",
+    "color": "#6366F1"
+  }
+]

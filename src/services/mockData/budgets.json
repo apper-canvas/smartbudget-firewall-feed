@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "month": "2024-01",
+    "year": 2024,
+    "totalLimit": 4000,
+    "categoryLimits": {
+      "Rent": 1200,
+      "Groceries": 600,
+      "Transportation": 250,
+      "Utilities": 150,
+      "Entertainment": 300,
+      "Dining Out": 200,
+      "Health": 150,
+      "Shopping": 400
+    }
+  },
+  {
+    "id": 2,
+    "month": "2024-02",
+    "year": 2024,
+    "totalLimit": 3800,
+    "categoryLimits": {
+      "Rent": 1200,
+      "Groceries": 550,
+      "Transportation": 250,
+      "Utilities": 150,
+      "Entertainment": 250,
+      "Dining Out": 180,
+      "Health": 120,
+      "Shopping": 350
+    }
+  }
+]
