@@ -44,20 +44,7 @@ useEffect(() => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
-        setAlertSummary(summary);
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, currentMonth, monthlyExpenses]);
-
-  if (loading) return <Loading text="Loading dashboard..." />;
-  if (error) return <Error message={error} onRetry={loadData} />;
-
-  // Current month calculations
+// Calculate current month data first (before useEffect)
   const currentMonth = new Date();
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -81,6 +68,23 @@ useEffect(() => {
   const currentBudget = budgets.find(b => 
     b.month === format(currentMonth, "yyyy-MM")
   );
+
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        try {
+          const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
+          setAlertSummary(summary);
+        } catch (err) {
+          console.error('Failed to load alert summary:', err);
+        }
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, currentMonth, monthlyExpenses]);
+
+  if (loading) return <Loading />;
+  if (error) return <Error message={error} />;
 
 
   const remainingBudget = currentBudget ? currentBudget.totalLimit - monthlyExpenses : 0;
