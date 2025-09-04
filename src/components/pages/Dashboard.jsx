@@ -40,9 +40,19 @@ const [alertSummary, setAlertSummary] = useState(null);
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
+        setAlertSummary(summary);
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, currentMonth, monthlyExpenses]);
 
   if (loading) return <Loading text="Loading dashboard..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
@@ -83,15 +93,6 @@ const [alertSummary, setAlertSummary] = useState(null);
     }, {});
 
   // Load budget alerts
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const summary = await budgetAlertService.getAlertSummary(format(currentMonth, "yyyy-MM"));
-        setAlertSummary(summary);
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, currentMonth, monthlyExpenses]);
 
   const budgetCards = currentBudget ? 
     Object.entries(currentBudget.categoryLimits).map(([category, budget]) => ({
