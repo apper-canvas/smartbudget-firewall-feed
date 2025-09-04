@@ -236,11 +236,7 @@ function App() {
 }
 
 function AppRoot() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
+  return <App />;
 }
 
 export default AppRoot;
