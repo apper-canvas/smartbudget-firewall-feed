@@ -51,7 +51,7 @@ const Budgets = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     // Load existing budget for selected month
     const existingBudget = budgets.find(b => b.month === selectedMonth);
     if (existingBudget) {
@@ -66,6 +66,16 @@ const Budgets = () => {
       });
     }
   }, [selectedMonth, budgets]);
+
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+        // You could store alerts in state if needed for UI
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, selectedMonth, categorySpending]);
 if (loading) return <Loading text="Loading budgets..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
@@ -88,15 +98,6 @@ if (loading) return <Loading text="Loading budgets..." />;
   }, {});
 
   // Load budget alerts when data changes
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
-        // You could store alerts in state if needed for UI
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, selectedMonth, categorySpending]);
 
   const handleCategoryLimitChange = (categoryName, value) => {
     setBudgetForm(prev => ({
