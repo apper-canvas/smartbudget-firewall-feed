@@ -3,8 +3,6 @@ import { transactionService } from "@/services/api/transactionService";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { toast } from "react-toastify";
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 // Alert thresholds
 const THRESHOLDS = {
   WARNING: 80,
@@ -40,8 +38,6 @@ const getAlertMessage = (level, category, amount, budget) => {
 export const budgetAlertService = {
   // Calculate budget alerts for current month
   async calculateBudgetAlerts(month = format(new Date(), "yyyy-MM")) {
-    await delay(200);
-    
     try {
       const [budgets, transactions] = await Promise.all([
         budgetService.getAll(),
