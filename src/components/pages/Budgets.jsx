@@ -67,22 +67,7 @@ useEffect(() => {
     }
   }, [selectedMonth, budgets]);
 
-// Early returns for loading and error states
-// Load budget alerts when data changes
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
-        // You could store alerts in state if needed for UI
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, selectedMonth, categorySpending]);
-
-  if (loading) return <Loading text="Loading budgets..." />;
-  if (error) return <Error message={error} onRetry={loadData} />;
-
-  // Calculate spending for current month
+// Calculate spending for current month
   const currentBudget = budgets.find(b => b.month === selectedMonth);
   const categorySpending = transactions
     .filter(t => {
@@ -97,6 +82,20 @@ useEffect(() => {
       acc[t.category] = (acc[t.category] || 0) + t.amount;
       return acc;
     }, {});
+
+// Load budget alerts when data changes
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+        // You could store alerts in state if needed for UI
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, selectedMonth, categorySpending]);
+
+  if (loading) return <Loading text="Loading budgets..." />;
+  if (error) return <Error message={error} onRetry={loadData} />;
 
   // Show empty state if no budget for current month
   const showEmptyState = !currentBudget;
