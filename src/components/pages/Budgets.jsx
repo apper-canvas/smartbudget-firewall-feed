@@ -67,16 +67,8 @@ useEffect(() => {
     }
   }, [selectedMonth, budgets]);
 
-  useEffect(() => {
-    const loadAlerts = async () => {
-      if (currentBudget) {
-        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
-        // You could store alerts in state if needed for UI
-      }
-    };
-    loadAlerts();
-  }, [currentBudget, selectedMonth, categorySpending]);
-if (loading) return <Loading text="Loading budgets..." />;
+// Early returns for loading and error states
+  if (loading) return <Loading text="Loading budgets..." />;
   if (error) return <Error message={error} onRetry={loadData} />;
 
   const expenseCategories = categories.filter(cat => cat.type === "expense");
@@ -96,6 +88,16 @@ if (loading) return <Loading text="Loading budgets..." />;
     acc[t.category] = (acc[t.category] || 0) + t.amount;
     return acc;
   }, {});
+
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (currentBudget) {
+        const alerts = await budgetAlertService.calculateBudgetAlerts(selectedMonth);
+        // You could store alerts in state if needed for UI
+      }
+    };
+    loadAlerts();
+  }, [currentBudget, selectedMonth, categorySpending]);
 
   // Load budget alerts when data changes
 
