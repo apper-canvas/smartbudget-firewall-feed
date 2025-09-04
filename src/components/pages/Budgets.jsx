@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Select from "@/components/atoms/Select";
-import Card from "@/components/atoms/Card";
-import BudgetCard from "@/components/molecules/BudgetCard";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { budgetService } from "@/services/api/budgetService";
 import { categoryService } from "@/services/api/categoryService";
 import { transactionService } from "@/services/api/transactionService";
 import { budgetAlertService } from "@/services/api/budgetAlertService";
-import { format, startOfMonth, endOfMonth } from "date-fns";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import BudgetCard from "@/components/molecules/BudgetCard";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import Input from "@/components/atoms/Input";
+import Select from "@/components/atoms/Select";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 const Budgets = () => {
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -68,27 +68,7 @@ useEffect(() => {
   }, [selectedMonth, budgets]);
 
 // Early returns for loading and error states
-  if (loading) return <Loading text="Loading budgets..." />;
-  if (error) return <Error message={error} onRetry={loadData} />;
-
-  const expenseCategories = categories.filter(cat => cat.type === "expense");
-  const currentBudget = budgets.find(b => b.month === selectedMonth);
-
-  // Calculate spending for selected month
-  const [year, month] = selectedMonth.split("-").map(Number);
-  const monthStart = startOfMonth(new Date(year, month - 1));
-  const monthEnd = endOfMonth(new Date(year, month - 1));
-
-  const monthTransactions = transactions.filter(t => {
-    const transactionDate = new Date(t.date);
-    return transactionDate >= monthStart && transactionDate <= monthEnd && t.type === "expense";
-  });
-
-  const categorySpending = monthTransactions.reduce((acc, t) => {
-    acc[t.category] = (acc[t.category] || 0) + t.amount;
-    return acc;
-  }, {});
-
+// Load budget alerts when data changes
   useEffect(() => {
     const loadAlerts = async () => {
       if (currentBudget) {
@@ -98,6 +78,28 @@ useEffect(() => {
     };
     loadAlerts();
   }, [currentBudget, selectedMonth, categorySpending]);
+
+  if (loading) return <Loading text="Loading budgets..." />;
+  if (error) return <Error message={error} onRetry={loadData} />;
+
+  // Calculate spending for current month
+  const currentBudget = budgets.find(b => b.month === selectedMonth);
+  const categorySpending = transactions
+    .filter(t => {
+      const transactionDate = new Date(t.date);
+      return (
+        transactionDate >= startOfMonth(new Date(selectedMonth)) &&
+        transactionDate <= endOfMonth(new Date(selectedMonth)) &&
+        t.type === 'expense'
+      );
+    })
+    .reduce((acc, t) => {
+      acc[t.category] = (acc[t.category] || 0) + t.amount;
+      return acc;
+    }, {});
+
+  // Show empty state if no budget for current month
+  const showEmptyState = !currentBudget;
 
   // Load budget alerts when data changes
 
@@ -233,10 +235,10 @@ const budgetCards = currentBudget ?
                   required
                 />
 
-                <div>
+<div>
                   <h4 className="text-lg font-semibold text-gray-800 mb-4">Category Limits</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {expenseCategories.map(category => (
+                    {categories.filter(c => c.type === 'expense').map(category => (
                       <div key={category.id} className="flex items-center space-x-3 p-3 bg-white/50 rounded-lg">
                         <div 
                           className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
